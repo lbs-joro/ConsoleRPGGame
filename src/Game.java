@@ -1,4 +1,3 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -7,7 +6,7 @@ import java.util.Scanner;
 public class Game {
     boolean isRunning = true;
     void run(){
-        Player player = new Player("Hero", 30,5);
+        Player player = new Player("Hero", 30,5, 50);
         List<Enemy> enemies = createEnemyList();
         int enemyIndex = 0;
         while (isRunning){
@@ -28,13 +27,19 @@ public class Game {
     List<Enemy> createEnemyList(){
         List<Enemy> enemies = new ArrayList<>();
         Random rand = new Random();
-        for (int i = 0; i < 5; i ++){
-            Enemy enemy = new Enemy("Goblin", rand.nextInt(5,15),
-                                    rand.nextInt(1,5),
-                                    rand.nextInt(10,30)
-            );
-            enemies.add(enemy);
-        }
+
+        EnemyWithArmor enemyWithArmor = new EnemyWithArmor("Goblin", rand.nextInt(5,15),
+                rand.nextInt(1,5),
+                rand.nextInt(10,30)
+        );
+
+        Enemy normalEnemy = new Enemy("Troll", 16, 4, rand.nextInt(10,30));
+
+        DoubleDamageEnemy doubleDamageEnemy = new DoubleDamageEnemy("Evil Wizard", rand.nextInt(10,20), 6, rand.nextInt(10,30) );
+
+        enemies.add(enemyWithArmor);
+        enemies.add(normalEnemy);
+        enemies.add(doubleDamageEnemy);
 
         return enemies;
     }
@@ -47,6 +52,7 @@ public class Game {
         while(player.isAlive() && enemy.isAlive()){
             System.out.println("Choose an option");
             System.out.println("[a] Attack");
+            System.out.println("[m] Magic attack");
             System.out.println("[q] Quit");
 
 
@@ -57,7 +63,13 @@ public class Game {
                 if(enemy.isAlive()){
                     enemy.attack(player);
                 }
-            }else if (ans.equals("q")){
+            }else if (ans.equals("m")){
+                player.magicAttack(enemy);
+                if(enemy.isAlive()){
+                    enemy.attack(player);
+                }
+            }
+            else if (ans.equals("q")){
                 System.out.println("You quit the game");
                 isRunning = false;
                 return;

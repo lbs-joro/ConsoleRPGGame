@@ -4,4 +4,6 @@ public class Enemy extends Character{
         super(name, health, damage);
         this.experienceGained = experienceGained;
     }
+
+
 }
