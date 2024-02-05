@@ -5,9 +5,22 @@ import java.util.Scanner;
 
 public class Game {
     boolean isRunning = true;
+    Inventory<Consumable> consumableInventory = new Inventory<>();
+    Inventory<Equipment> equipmentInventory = new Inventory<>();
     void run(){
         Player player = new Player("Hero", 30,5, 50);
+        HealthPotion hPot = new HealthPotion();
+        hPot.name = "Health Potion";
+        ManaPotion mPot = new ManaPotion();
+        mPot.name = "Mana Potion";
+
+        consumableInventory.add(hPot);
+        consumableInventory.add(mPot);
+
         List<Enemy> enemies = createEnemyList();
+
+
+
         int enemyIndex = 0;
         while (isRunning){
             fightSequence(player, enemies.get(enemyIndex));
@@ -53,6 +66,7 @@ public class Game {
             System.out.println("Choose an option");
             System.out.println("[a] Attack");
             System.out.println("[m] Magic attack");
+            System.out.println("[u] Use item");
             System.out.println("[q] Quit");
 
 
@@ -68,6 +82,8 @@ public class Game {
                 if(enemy.isAlive()){
                     enemy.attack(player);
                 }
+            }else if (ans.equals("u")){
+                useItem(player);
             }
             else if (ans.equals("q")){
                 System.out.println("You quit the game");
@@ -86,5 +102,15 @@ public class Game {
             System.out.println("Game over. You were defeated by the enemy.");
             isRunning = false;
         }
+    }
+
+    void useItem(Player player){
+        consumableInventory.print();
+        Scanner scan = new Scanner(System.in);
+        int index = scan.nextInt();
+
+        Consumable consumable = consumableInventory.getItem(index);
+        consumable.use(player);
+
     }
 }
